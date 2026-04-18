@@ -44,3 +44,4 @@ def chromium_page(playwright: Playwright):
     # Открываем браузер, создаем новую страницу
     browser = playwright.chromium.launch(headless=False)
     yield browser.new_page()
+    browser.close()
