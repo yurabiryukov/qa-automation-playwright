@@ -1,31 +1,11 @@
-from playwright.sync_api import sync_playwright, expect
+from pages.dashboard_page import DashboardPage
+from pages.registration_page import RegistrationPage
 
 
-def test_successful_registration():
-    with sync_playwright() as playwright:
-        # Открываем браузер и создаем новую страницу
-        browser = playwright.chromium.launch(headless=False)
-        page = browser.new_page()
+def test_successful_registration(registration_page: RegistrationPage, dashboard_page: DashboardPage):
+    registration_page.visit(url='https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration')
 
-        # Переходим на страницу регистрации
-        page.goto('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration')
+    registration_page.fill_registration_form(email='user.name@gmail.com', username='username', password='password')
+    registration_page.click_registration_button()
 
-        # Заполняем поле email
-        email_input = page.locator("//input[@id=':r0:']")
-        email_input.fill('user.name@gmail.com')
-
-        # Заполняем поле username
-        email_input = page.locator("//input[@id=':r1:']")
-        email_input.fill('username')
-
-        # Заполняем поле password
-        email_input = page.locator("//input[@id=':r2:']")
-        email_input.fill('password')
-
-        # Нажимаем на кнопку регистрации
-        reg_button = page.locator("//button[@id='registration-page-registration-button']")
-        reg_button.click()
-
-        # Проверяем, что мы на странице дашборда
-        dashboard_text = page.get_by_test_id('dashboard-toolbar-title-text')
-        expect(dashboard_text).to_have_text('Dashboard')
+    dashboard_page.check_visible_text()
